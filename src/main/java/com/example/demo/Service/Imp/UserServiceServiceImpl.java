@@ -13,7 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -109,12 +111,12 @@ public class UserServiceServiceImpl implements UserServiceService {
         switch (imageName){
             case "nginx":
             case "tomcat":
+            case "mongo":
+            case "mysql":
                 cmd = "";
                 break;
-            case "mysql":
             case "postgres":
             case "redis":
-            case "mongo":
             case "ubuntu":
                 cmd = "/bin/bash";
                 break;
@@ -127,6 +129,7 @@ public class UserServiceServiceImpl implements UserServiceService {
         String env = "";
         switch (imageName){
             case "nginx":
+            case "mongo":
                 env = "";
                 break;
             case "mysql":
@@ -134,11 +137,30 @@ public class UserServiceServiceImpl implements UserServiceService {
                 break;
             case "postgres":
             case "redis":
-            case "mongo":
             case "ubuntu":
             case "tomcat":
                 break;
         }
         return env;
+    }
+
+    @Override
+    public List<com.spotify.docker.client.messages.swarm.Service> listServiceByUserId(String userId) {
+        List<com.spotify.docker.client.messages.swarm.Service> services = new ArrayList<>();
+        com.spotify.docker.client.messages.swarm.Service.Criteria.Builder criteriaBuild =
+                com.spotify.docker.client.messages.swarm.Service.Criteria.builder();
+        Map<String,String> map = new HashMap<String, String>();
+        map.put("userId",userId);
+        criteriaBuild.labels(map);
+        try{
+            services = dockerSwarmClient.listServices(criteriaBuild.build());
+            return services;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        } catch (DockerException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

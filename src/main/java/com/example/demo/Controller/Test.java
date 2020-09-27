@@ -42,10 +42,10 @@ public class Test {
 //        docker.startContainer("bd89ca07227535b275df9a1b800d55e59d9593ad88b014b49c2364c652f8307f");
 //        docker.stopContainer("bd89ca07227535b275df9a1b800d55e59d9593ad88b014b49c2364c652f8307f",1);
 //        final List<Container> containers = docker.listContainers();
-        ServiceCreateResponse serviceCreateResponse = userServiceService.createServiceTask("111","","nginx",1,"6","8080","80");
-        if(serviceCreateResponse == null){
-            return new RespEntity("fail");
-        }
-        return new RespEntity("success",serviceCreateResponse);
+//        ServiceCreateResponse serviceCreateResponse = userServiceService.createServiceTask("111","","nginx",1,"6","8080","80");
+//        if(serviceCreateResponse == null){
+//            return new RespEntity("fail");
+//        }
+        return new RespEntity("success");
     }
 }

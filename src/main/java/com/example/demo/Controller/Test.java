@@ -31,10 +31,10 @@ public class Test {
     @RequestMapping(value = "/test")
     public RespEntity test() throws DockerCertificateException, DockerException,
             InterruptedException {
-        final DockerClient docker = DefaultDockerClient.builder()
-                .uri(URI.create("https://10.251.253.81:2376"))
-                .dockerCertificates(new DockerCertificates(Paths.get("./ca")))
-                .build();
+//        final DockerClient docker = DefaultDockerClient.builder()
+//                .uri(URI.create("https://10.251.253.81:2376"))
+//                .dockerCertificates(new DockerCertificates(Paths.get("./ca")))
+//                .build();
 //        final ContainerCreation container = docker.createContainer(ContainerConfig.builder().image("nginx").build());
 //        final List<Container> containers = docker.listContainers(DockerClient.ListContainersParam.allContainers());
 //        final ContainerInfo info = docker.inspectContainer("bd89ca07227535b275df9a1b800d55e59d9593ad88b014b49c2364c652f8307f");
@@ -42,8 +42,10 @@ public class Test {
 //        docker.startContainer("bd89ca07227535b275df9a1b800d55e59d9593ad88b014b49c2364c652f8307f");
 //        docker.stopContainer("bd89ca07227535b275df9a1b800d55e59d9593ad88b014b49c2364c652f8307f",1);
 //        final List<Container> containers = docker.listContainers();
-        userServiceService.createServiceTask("111","","nginx",1,"6","8080","80");
-        return new RespEntity("success");
-//        Services = com.spotify.docker.client.messages.swarm.Service.
+        ServiceCreateResponse serviceCreateResponse = userServiceService.createServiceTask("111","","nginx",1,"6","8080","80");
+        if(serviceCreateResponse == null){
+            return new RespEntity("fail");
+        }
+        return new RespEntity("success",serviceCreateResponse);
     }
 }

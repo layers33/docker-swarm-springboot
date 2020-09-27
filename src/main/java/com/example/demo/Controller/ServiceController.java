@@ -2,10 +2,13 @@ package com.example.demo.Controller;
 
 
 import com.example.demo.Entity.Application;
+import com.example.demo.Entity.Message;
 import com.example.demo.Repository.ApplicationRepository;
+import com.example.demo.Repository.MessageRepository;
 import com.example.demo.Repository.ServiceRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.UserServiceService;
+import com.example.demo.rjson.ReqMessage;
 import com.example.demo.rjson.ReqService;
 import com.example.demo.rjson.ReqUser;
 import com.example.demo.rjson.RespEntity;
@@ -38,6 +41,9 @@ public class ServiceController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
 
     @ResponseBody
     @RequestMapping(value = "/apply")
@@ -76,10 +82,14 @@ public class ServiceController {
         }
         ServiceCreateResponse serviceCreateResponse = userServiceService.createServiceTask(reqService.getUserId(),
                 cmd,reqService.getImage(),reqService.getReplicas(), reqService.getServiceName(),hostPort,targetPort,env);
+        applicationRepository.deleteByServiceNameAndUserId(reqService.getServiceName(),reqService.getUserId());
         if(serviceCreateResponse == null){
+            Message message = new Message(reqService.getUserId(),"你请求的service:"+reqService.getServiceName()+"创建失败了");
+            messageRepository.save(message);
             return new RespEntity("fail");
         }
-        applicationRepository.deleteByServiceNameAndUserId(reqService.getServiceName(),reqService.getUserId());
+        Message message = new Message(reqService.getUserId(),"你请求的service:"+reqService.getServiceName()+"被通过了");
+        messageRepository.save(message);
         return new RespEntity("success",serviceCreateResponse);
     }
 
@@ -87,6 +97,8 @@ public class ServiceController {
     @RequestMapping(value = "/refuse")
     public RespEntity refuse(@RequestBody ReqService reqService){
         applicationRepository.deleteByServiceNameAndUserId(reqService.getServiceName(),reqService.getUserId());
+        Message message = new Message(reqService.getUserId(),"你请求的service:"+reqService.getServiceName()+"被拒绝了");
+        messageRepository.save(message);
         return new RespEntity("success");
     }
 
@@ -94,7 +106,7 @@ public class ServiceController {
     @RequestMapping(value = "/allMyServices")
     public RespEntity allMyServices(@RequestBody ReqUser reqUser){
         List<com.spotify.docker.client.messages.swarm.Service> services = new ArrayList<>();
-        String userId = userRepository.findUserByUsername(reqUser.getUsername()).get_id();
+        String userId = reqUser.getUserId();
         services = userServiceService.listServiceByUserId(userId);
         if(services == null){
             return new RespEntity("fail",services);
@@ -102,4 +114,25 @@ public class ServiceController {
         return new RespEntity("success",services);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/allMyMessages")
+    public RespEntity allMyMessages(@RequestBody ReqUser reqUser){
+        List<Message> messages = new ArrayList<>();
+        messages = messageRepository.findByUserId(reqUser.getUserId());
+        return new RespEntity("success",messages);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/deleteAllMyMessage")
+    public RespEntity deleteAllMyMessage(@RequestBody ReqUser reqUser){
+        messageRepository.deleteMessagesByUserId(reqUser.getUserId());
+        return new RespEntity("success");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/deleteMessage")
+    public RespEntity deleteMessage(@RequestBody ReqMessage reqMessage){
+        messageRepository.deleteBy_id(reqMessage.getMessageId());
+        return new RespEntity("success");
+    }
 }

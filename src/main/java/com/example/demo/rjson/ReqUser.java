@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ReqUser {
 
+    @JsonProperty(value = "userId")
+    private String userId;
 
     @JsonProperty(value = "username")
     private String username;
@@ -36,5 +38,13 @@ public class ReqUser {
 
     public void setIdentity(String identity) {
         this.identity = identity;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

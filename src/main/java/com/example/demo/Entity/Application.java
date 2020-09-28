@@ -1,6 +1,5 @@
 package com.example.demo.Entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "application")
@@ -16,14 +15,17 @@ public class Application {
 
     private String serviceName;
 
+    private String username;
+
     public Application() {
     }
 
-    public Application(String userId, String image, int replicas, String serviceName) {
+    public Application(String userId, String image, int replicas, String serviceName,String username) {
         this.userId = userId;
         this.image = image;
         this.replicas = replicas;
         this.serviceName = serviceName;
+        this.username = username;
     }
 
     public String get_id() {
@@ -64,5 +66,13 @@ public class Application {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

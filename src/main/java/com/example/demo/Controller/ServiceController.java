@@ -53,6 +53,7 @@ public class ServiceController {
         }
         Application application = new Application();
         BeanUtils.copyProperties(reqService,application);
+        application.setUsername(userRepository.findBy_id(reqService.getUserId()).getUsername());
         Application result = applicationRepository.save(application);
         return new RespEntity("success",result);
     }

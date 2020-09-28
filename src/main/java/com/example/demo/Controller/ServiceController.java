@@ -8,10 +8,7 @@ import com.example.demo.Repository.MessageRepository;
 import com.example.demo.Repository.ServiceRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.UserServiceService;
-import com.example.demo.rjson.ReqMessage;
-import com.example.demo.rjson.ReqService;
-import com.example.demo.rjson.ReqUser;
-import com.example.demo.rjson.RespEntity;
+import com.example.demo.rjson.*;
 import com.spotify.docker.client.messages.ServiceCreateResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,5 +132,23 @@ public class ServiceController {
     public RespEntity deleteMessage(@RequestBody ReqMessage reqMessage){
         messageRepository.deleteBy_id(reqMessage.getMessageId());
         return new RespEntity("success");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/allServices")
+    public RespEntity allServices(){
+        List<com.spotify.docker.client.messages.swarm.Service> services = new ArrayList<>();
+        services =userServiceService.listAllService();
+        List<RespService> respServices = new ArrayList<>();
+        if(services == null){
+            return new RespEntity("success");
+        }
+        for(int i = 0; i < services.size(); i++){
+            String id = services.get(i).spec().labels().get("userId");
+            String username = userRepository.findBy_id(id).getUsername();
+            RespService respService = new RespService(username, services.get(i));
+            respServices.add(respService);
+        }
+        return new RespEntity("success",respServices);
     }
 }

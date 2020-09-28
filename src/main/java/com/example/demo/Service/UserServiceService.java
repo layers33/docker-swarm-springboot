@@ -20,4 +20,6 @@ public interface UserServiceService {
 
     public List<Service> listServiceByUserId(String userId);
 
+    public List<Service> listAllService();
+
 }

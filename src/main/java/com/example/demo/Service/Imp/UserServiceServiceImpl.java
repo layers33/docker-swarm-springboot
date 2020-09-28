@@ -164,4 +164,19 @@ public class UserServiceServiceImpl implements UserServiceService {
             return null;
         }
     }
+
+    @Override
+    public List<com.spotify.docker.client.messages.swarm.Service> listAllService() {
+        List<com.spotify.docker.client.messages.swarm.Service> services = new ArrayList<>();
+        try {
+            services = dockerSwarmClient.listServices();
+            return services;
+        } catch (DockerException e) {
+            e.printStackTrace();
+            return null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

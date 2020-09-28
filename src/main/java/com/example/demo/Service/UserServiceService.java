@@ -5,6 +5,7 @@ import com.spotify.docker.client.messages.ServiceCreateResponse;
 import com.spotify.docker.client.messages.swarm.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 
@@ -21,5 +22,7 @@ public interface UserServiceService {
     public List<Service> listServiceByUserId(String userId);
 
     public List<Service> listAllService();
+
+    public boolean isPortUsing(int port) throws UnknownHostException;
 
 }

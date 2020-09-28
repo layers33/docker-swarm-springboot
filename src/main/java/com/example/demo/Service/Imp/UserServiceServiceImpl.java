@@ -11,7 +11,11 @@ import com.spotify.docker.client.messages.swarm.*;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -178,5 +182,19 @@ public class UserServiceServiceImpl implements UserServiceService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public boolean isPortUsing(int port) throws UnknownHostException {
+        boolean flag = false;
+        InetAddress theAddress = InetAddress.getByName("10.251.253.81");
+        try {
+            //如果可以正常创建Socket，则可以证明主机上的目标端口已经被使用
+            Socket socket = new Socket(theAddress,port);
+            flag = true;
+        } catch (IOException e) {
+
+        }
+        return flag;
     }
 }

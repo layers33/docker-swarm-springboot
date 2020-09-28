@@ -5,7 +5,6 @@ import com.example.demo.Entity.Application;
 import com.example.demo.Entity.Message;
 import com.example.demo.Repository.ApplicationRepository;
 import com.example.demo.Repository.MessageRepository;
-import com.example.demo.Repository.ServiceRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.UserServiceService;
 import com.example.demo.rjson.*;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,9 +29,6 @@ public class ServiceController {
 
     @Autowired
     private UserServiceService userServiceService;
-
-    @Autowired
-    private ServiceRepository serviceRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -64,7 +61,7 @@ public class ServiceController {
 
     @ResponseBody
     @RequestMapping(value = "/agree")
-    public RespEntity agree(@RequestBody ReqService reqService){
+    public RespEntity agree(@RequestBody ReqService reqService) throws UnknownHostException {
         if(applicationRepository.findByServiceNameAndUserId(reqService.getServiceName(),reqService.getUserId()) == null){
             return new RespEntity("no this application");
         }
@@ -74,7 +71,7 @@ public class ServiceController {
         Random random = new Random();
         int i = random.nextInt(65535) % (55536) + 10000;
         String hostPort = String.valueOf(i);
-        while(serviceRepository.findByPort(hostPort) != null){
+        while(userServiceService.isPortUsing(i)){
             i = random.nextInt(65535) % (55536) + 10000;
             hostPort = String.valueOf(i);
         }

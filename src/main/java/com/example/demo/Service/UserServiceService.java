@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ServiceCreateResponse;
 import com.spotify.docker.client.messages.swarm.Service;
 
@@ -25,4 +26,5 @@ public interface UserServiceService {
 
     public boolean isPortUsing(int port) throws UnknownHostException;
 
+    public String scale(String serviceId,Integer num) throws DockerException, InterruptedException;
 }

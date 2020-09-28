@@ -197,4 +197,23 @@ public class UserServiceServiceImpl implements UserServiceService {
         }
         return flag;
     }
+
+    @Override
+    public String scale(String serviceId,Integer num) throws DockerException, InterruptedException {
+        com.spotify.docker.client.messages.swarm.Service service = dockerSwarmClient.inspectService(serviceId);
+
+        ServiceSpec.Builder builder = ServiceSpec.builder();
+        builder.name(service.spec().name());
+        // 更新横向扩展数目
+        builder.taskTemplate(service.spec().taskTemplate());
+        builder.labels(service.spec().labels());
+        builder.endpointSpec(service.spec().endpointSpec());
+        builder.mode(service.spec().mode());
+        builder.mode(ServiceMode.withReplicas(num));
+        dockerSwarmClient.updateService(serviceId,dockerSwarmClient.inspectService(serviceId).version().index(),
+                builder.build());
+        return "success";
+    }
+
+
 }

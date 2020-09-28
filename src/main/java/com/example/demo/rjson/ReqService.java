@@ -16,6 +16,9 @@ public class ReqService {
     @JsonProperty(value = "serviceName")
     private String serviceName;
 
+    @JsonProperty(value = "serviceId")
+    private String serviceId;
+
     public String getUserId() {
         return userId;
     }
@@ -46,5 +49,13 @@ public class ReqService {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
     }
 }

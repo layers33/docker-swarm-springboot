@@ -8,6 +8,7 @@ import com.example.demo.Repository.MessageRepository;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.UserServiceService;
 import com.example.demo.rjson.*;
+import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.ServiceCreateResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,5 +148,12 @@ public class ServiceController {
             respServices.add(respService);
         }
         return new RespEntity("success",respServices);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/scale")
+    public RespEntity scale(@RequestBody ReqService reqService) throws DockerException, InterruptedException {
+        userServiceService.scale(reqService.getServiceId(),reqService.getReplicas());
+        return new RespEntity("success");
     }
 }

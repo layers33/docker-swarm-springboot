@@ -27,7 +27,7 @@ public class UserController {
         if(user == null) {
             return new RespEntity("fail", null);
         }else {
-            return new RespEntity("success", user.getUsername());
+            return new RespEntity("success", user);
         }
     }
     @ResponseBody

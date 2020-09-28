@@ -37,6 +37,7 @@ public class UserServiceServiceImpl implements UserServiceService {
         TaskSpec.Builder taskBuilder = TaskSpec.builder();
         ContainerSpec.Builder containerBuilder = ContainerSpec.builder();
         containerBuilder.image(imageName);
+
         containerBuilder.tty(true);
         // 设置CMD
         if(!cmd.equals("")) {

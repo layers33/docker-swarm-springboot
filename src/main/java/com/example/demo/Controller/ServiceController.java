@@ -156,4 +156,11 @@ public class ServiceController {
         userServiceService.scale(reqService.getServiceId(),reqService.getReplicas());
         return new RespEntity("success");
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/deleteService")
+    public RespEntity deleteService(@RequestBody ReqService reqService){
+        userServiceService.removeService(reqService.getServiceId());
+        return new RespEntity("success");
+    }
 }

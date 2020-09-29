@@ -215,5 +215,16 @@ public class UserServiceServiceImpl implements UserServiceService {
         return "success";
     }
 
+    @Override
+    public void removeService(String serviceId) {
+        try {
+            dockerSwarmClient.removeService(serviceId);
+        } catch (DockerException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

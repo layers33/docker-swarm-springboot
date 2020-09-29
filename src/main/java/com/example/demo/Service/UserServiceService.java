@@ -27,4 +27,6 @@ public interface UserServiceService {
     public boolean isPortUsing(int port) throws UnknownHostException;
 
     public String scale(String serviceId,Integer num) throws DockerException, InterruptedException;
+
+    public void removeService(String serviceId);
 }
